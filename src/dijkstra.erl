@@ -10,11 +10,19 @@
 %%
 %% Exported Functions
 %%
--export([table/2]).
+-export([table/2,route/2]).
 
 %%
 %% API Functions
 %%
+
+route(Node,Table) ->
+    case lists:keyfind(Node, 1, Table) of
+        {Dest,Gateway}->
+            {ok,Gateway};
+        false ->
+            notfound
+    end.
 
 table(Gateways, Map) ->
     AllNodes = map:all_nodes(Map),
