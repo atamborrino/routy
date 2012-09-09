@@ -10,10 +10,28 @@
 %%
 %% Exported Functions
 %%
--export([update/4,iterate/3]).
+-export([table/2]).
 
 %%
 %% API Functions
+%%
+
+table(Gateways, Map) ->
+    AllNodes = map:all_nodes(Map),
+    InitialSortedList = lists:keysort(2, lists:map(fun(El) ->
+                                              case lists:member(El, Gateways) of
+                                                  true ->
+                                                      {El,0,El};
+                                  
+                                                  false ->
+                                                      {El,inf,unknown}
+                                              end
+                                              end, AllNodes)),
+    iterate(InitialSortedList, Map, []).
+
+            
+%%
+%% Local Functions
 %%
 
 update(Node, N, Gateway, Sorted) ->
@@ -24,10 +42,6 @@ update(Node, N, Gateway, Sorted) ->
         false ->
             Sorted
     end.
-            
-%%
-%% Local Functions
-%%
 
 iterate(Sorted, Map, Table) ->
     case Sorted of
@@ -43,7 +57,7 @@ iterate(Sorted, Map, Table) ->
                                         update(El,L+1,Gateway,SortedList)
                                         end, T, Reachables);
                 false ->
-                    NewSortedList = T
+                    NewSortedList = T   
             end,
             iterate(NewSortedList,Map,[{Dest,Gateway} | Table])           
     end.
