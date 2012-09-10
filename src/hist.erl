@@ -22,10 +22,12 @@ new(Name) ->
 
 update(Node, N, History) ->
     case dict:find(Node, History) of
-        {ok,Value} ->
+        {ok,[Value|_]} ->
             if
                 N > Value ->
-                    {new, dict:update(Node, fun(Value) -> N end, History)};
+                    Dict1 = dict:erase(Node, History),
+                    Dict2 = dict:append(Node, N, Dict1),
+                    {new, Dict2};
                 true -> 
                     old
             end;
