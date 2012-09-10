@@ -10,7 +10,7 @@
 %%
 %% Exported Functions
 %%
--export([]).
+-export([add/4,broadcast/2,list/1,lookup/2,name/2,new/0,ref/2,remove/2]).
 
 %%
 %% API Functions
@@ -20,7 +20,13 @@ new() ->
     [].
 
 add(Name,Ref,Pid,Intf) ->
-    [{Name,Ref,Pid} | Intf].
+    case lists:member({Name,Ref,Pid}, Intf) of
+        true ->
+                Intf;
+        false ->
+                [{Name,Ref,Pid} | Intf]
+    end.
+            
 
 remove(Name,Intf) ->
     lists:delete(Name, Intf).
