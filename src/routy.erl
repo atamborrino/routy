@@ -80,11 +80,11 @@ router(Name, N, Hist, Intf, Table, Map) ->
            router(Name, N+1, Hist, Intf, Table, Map);
         
         {route, Name, From, Message} ->
-          io:format("~w: received message ~w ~n", [Name, Message]),
+          io:format("~w: received message ~w~n", [Name, Message]),
           router(Name, N, Hist, Intf, Table, Map);
         
         {route, To, From, Message} ->
-          io:format("~w: routing message (~w)", [Name, Message]),
+          io:format("~w: routing message (~w)~n", [Name, Message]),
           case dijkstra:route(To, Table) of
              {ok, Gw} ->
                 case intf:lookup(Gw, Intf) of
